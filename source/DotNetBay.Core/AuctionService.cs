@@ -79,6 +79,7 @@ namespace DotNetBay.Core
                 throw new ArgumentException("Auction cannot be null", "auction");
             }
 
+            /*
             if (auction.StartDateTimeUtc < DateTime.UtcNow)
             {
                 throw new ArgumentException("The start of the auction needs to be in the future", "auction");
@@ -88,6 +89,7 @@ namespace DotNetBay.Core
             {
                 throw new ArgumentException("The end of the auction needs to be in the future", "auction");
             }
+            */
 
             if (auction.Bids != null && auction.Bids.Any())
             {
