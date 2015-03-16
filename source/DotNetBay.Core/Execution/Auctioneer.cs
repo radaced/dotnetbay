@@ -80,7 +80,7 @@ namespace DotNetBay.Core.Execution
         private void StartPendingAuctions()
         {
             // Process all auctions which should be closed
-            var auctionsToStart = this.repository.GetAuctions().Where(a => !a.IsRunning && a.StartDateTimeUtc < DateTime.UtcNow).ToList();
+            var auctionsToStart = this.repository.GetAuctions().Where(a => !a.IsRunning && a.StartDateTimeUtc < DateTime.UtcNow && a.EndDateTimeUtc > DateTime.UtcNow).ToList();
 
             foreach (var auction in auctionsToStart)
             {
@@ -89,13 +89,18 @@ namespace DotNetBay.Core.Execution
                 this.OnAuctionStarted(new AuctionEventArgs() { Auction = auction, IsSuccessful = true });
             }
 
-            this.repository.SaveChanges();
+            if (auctionsToStart.Any())
+            {
+                this.repository.SaveChanges();
+            }
         }
 
         private void ProcessOpenBids()
         {
             // Process all auctions with open bids
             var openAuctions = this.repository.GetAuctions().Where(a => a.Bids.Any(b => b.Accepted == null));
+            
+            var processedBids = false;
 
             foreach (var auction in openAuctions)
             {
@@ -120,10 +125,15 @@ namespace DotNetBay.Core.Execution
                         bid.Accepted = false;
                         this.OnBidDeclined(new ProcessedBidEventArgs { Bid = bid, Auction = auction });
                     }
+
+                    processedBids = true;
                 }
             }
 
-            this.repository.SaveChanges();
+            if (processedBids)
+            {
+                this.repository.SaveChanges();
+            }
         }
 
         private void EndAndCloseFinishedAuctions()
@@ -148,10 +158,20 @@ namespace DotNetBay.Core.Execution
                 auction.IsClosed = true;
                 auction.CloseDateTimeUtc = DateTime.UtcNow;
 
-                this.repository.SaveChanges();
+                this.OnAuctionEnded(new AuctionEventArgs() { Auction = auction, IsSuccessful = auction.Winner != null });
+            }
 
-                this.OnAuctionEnded(
-                    new AuctionEventArgs() { Auction = auction, IsSuccessful = auction.Winner != null });
+            // Sync IsRunning from IsClosed
+            var auctionsToSync = this.repository.GetAuctions().Where(a => a.IsClosed && a.IsRunning).ToList();
+
+            foreach (var auction in auctionsToSync)
+            {
+                auction.IsRunning = false;
+            }
+
+            if (auctionsToClose.Any() || auctionsToSync.Any())
+            {
+                this.repository.SaveChanges();
             }
         }
 
