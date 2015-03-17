@@ -32,16 +32,23 @@ namespace DotNetBay.Core
         {
             if (this.mainRepository.GetAuctions().Any(a => a.Id == auction.Id))
             {
-                return this.mainRepository.Update(auction);
+                var updatedAuction = this.mainRepository.Update(auction);
+                this.mainRepository.SaveChanges();
+                
+                return updatedAuction;
             }
 
             this.ValidateNewAuctionAndThrowOnError(auction);
-            return this.mainRepository.Add(auction);
+            
+            var newAuction = this.mainRepository.Add(auction);
+            this.mainRepository.SaveChanges();
+            
+            return newAuction;
         }
 
         public Bid PlaceBid(Member bidder, Auction auction, double amount)
         {
-            var auct = this.mainRepository.GetAuctions().FirstOrDefault(a => a.Id == auction.Id && a == auction);
+            var auct = this.mainRepository.GetAuctions().ToList().FirstOrDefault(a => a.Id == auction.Id && a == auction);
 
             if (auct == null)
             {
@@ -68,6 +75,7 @@ namespace DotNetBay.Core
             };
 
             this.mainRepository.Add(bid);
+            this.mainRepository.SaveChanges();
 
             return bid;
         }
