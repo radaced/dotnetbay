@@ -1,9 +1,8 @@
 using System;
 using System.Globalization;
-using System.Windows;
 using System.Windows.Data;
 
-namespace DotNetBay.WPF
+namespace DotNetBay.WPF.Converter
 {
     public class BooleanToStatusTextConverter : IValueConverter
     {

@@ -6,7 +6,7 @@ using DotNetBay.Core;
 using DotNetBay.Core.Execution;
 using DotNetBay.Model;
 
-namespace DotNetBay.WPF
+namespace DotNetBay.WPF.View
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -69,7 +69,7 @@ namespace DotNetBay.WPF
 
         private void SellButton_Click(object sender, RoutedEventArgs e)
         {
-            var sellView = new SellView();
+            var sellView = new View.SellView();
             sellView.ShowDialog();
 
             var allAuctionsFromService = auctionService.GetAll();
@@ -82,7 +82,7 @@ namespace DotNetBay.WPF
 
             if (selectedAuction.GetType() == typeof(Auction))
             {
-                var bidView = new BidView((Auction) selectedAuction);
+                var bidView = new View.BidView((Auction) selectedAuction);
                 bidView.ShowDialog();
             }
         }
