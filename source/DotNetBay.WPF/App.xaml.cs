@@ -1,8 +1,12 @@
 ﻿using System;
+using System.Data.Entity;
+using System.Data.Entity.SqlServer;
 using System.Linq;
 using System.Windows;
 using DotNetBay.Core;
 using DotNetBay.Core.Execution;
+using DotNetBay.Data.EF;
+using DotNetBay.Data.EF.Migrations;
 using DotNetBay.Data.FileStorage;
 using DotNetBay.Interfaces;
 using DotNetBay.Model;
@@ -19,6 +23,9 @@ namespace DotNetBay.WPF
 
         public App()
         {
+            var ensureDLLIsCopied = SqlProviderServices.Instance;
+            Database.SetInitializer(new MigrateDatabaseToLatestVersion<MainDbContext, Configuration>());
+
             MainRepository = new FileSystemMainRepository("data.json");
             AuctionRunner = new AuctionRunner(this.MainRepository);
 

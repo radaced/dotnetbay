@@ -22,8 +22,9 @@ namespace DotNetBay.WPF.View
 
             var memberService = new SimpleMemberService(app.MainRepository);
             var auctionService = new AuctionService(app.MainRepository, memberService);
+            var auctioneer = app.AuctionRunner.Auctioneer;
 
-            DataContext = new MainViewModel(auctionService, memberService);
+            DataContext = new MainViewModel(auctioneer, auctionService, memberService);
         }
     }
 }

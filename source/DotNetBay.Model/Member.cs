@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace DotNetBay.Model
@@ -19,6 +20,8 @@ namespace DotNetBay.Model
 
         public List<Auction> Auctions { get; set; }
 
-        public List<Bid> Bids { get; set; } 
+        public List<Bid> Bids { get; set; }
+
+        public String Location { get; set; }
     }
 }

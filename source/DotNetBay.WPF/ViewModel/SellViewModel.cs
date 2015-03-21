@@ -14,7 +14,13 @@ namespace DotNetBay.WPF.ViewModel
         private readonly Auction newAuction;
 
         public Auction NewAuction { get { return newAuction; } }
-        public String PathToAuctionImage { get; set; }
+
+        private string pathToAuctionImage;
+        public String PathToAuctionImage
+        {
+            get { return pathToAuctionImage; }
+            set { Set(() => PathToAuctionImage, ref pathToAuctionImage, value); }
+        }
         public RelayCommand<Window> AddNewAuctionCommand { get; private set; }
         public RelayCommand<Window> CancelCommand { get; private set; }
         public RelayCommand<String> FileChooserCommand { get; private set; } 
@@ -59,7 +65,6 @@ namespace DotNetBay.WPF.ViewModel
                 {
                     PathToAuctionImage = openFileDialog.FileName;
                     newAuction.Image = File.ReadAllBytes(PathToAuctionImage);
-                    OnPropertyChanged("PathToAuctionImage");
                 }
             }
         }

@@ -5,74 +5,130 @@ using DotNetBay.WPF.View;
 
 namespace DotNetBay.WPF.ViewModel
 {
-    class AuctionViewModel
+    class AuctionViewModel : ViewModelBase
     {
-        private SimpleMemberService memberService;
-        private AuctionService auctionService;
         private Auction auction;
+        private double currentPrice;
+        private double bidCount;
+        private string currentWinner;
+        private DateTime? closedDateLocal;
+        private string winner;
+        private string status;
+        private bool isRunning;
 
-        public RelayCommand<Auction> NewBidCommand { get; private set; } 
+        public RelayCommand<object> NewBidCommand { get; private set; }
 
-        public Auction Auction { get; set; }
-        public long Id { get; private set; }
-        public double StartPrice { get; set; }
-        public string Title { get; set; }
-        public string Description { get; set; }
-        public double CurrentPrice { get; set; }
-        public byte[] Image { get; set; }
+        public Auction Auction { get { return auction; } }
 
-        private DateTime startDateTimeUtc;
-        public DateTime StartDateTimeUtc { get { return startDateTimeUtc; } set { startDateTimeUtc = value; } }
+        public string Title { get { return auction.Title; } }
 
-        private DateTime endDateTimeUtc;
-        public DateTime EndDateTimeUtc { get { return endDateTimeUtc; } set { endDateTimeUtc = value; } }
+        public byte[] Image { get { return auction.Image; } }
 
-        private DateTime closeDateTimeUtc;
-        public DateTime CloseDateTimeUtc { get { return closeDateTimeUtc; } set { closeDateTimeUtc = value; } }
+        public double StartPrice { get { return auction.StartPrice; } }
 
-        public Member Seller { get; set; }
-        public Member Winner { get; set; }
-        public Bid ActiveBid { get; set; }
-        public bool IsClosed { get; set; }
-        public bool IsRunning { get; set; }
-
-        public AuctionViewModel(Auction auction, SimpleMemberService memberService, AuctionService auctionService)
+        public string Status
         {
-            this.memberService = memberService;
-            this.auctionService = auctionService;
-        
-            NewBidCommand = new RelayCommand<Auction>(NewBidAction);
+            get { return status; } 
+            set { Set(() => Status, ref status, value); }
+        }
 
-            if (auction != null)
-            {
-                Id = auction.Id;
-                StartPrice = auction.StartPrice;
-                Title = auction.Title;
-                Description = auction.Description;
-                Image = auction.Image;
-                
-                CurrentPrice = auction.CurrentPrice;
-                StartDateTimeUtc = auction.StartDateTimeUtc;
-                EndDateTimeUtc = auction.EndDateTimeUtc;
-                CloseDateTimeUtc = auction.CloseDateTimeUtc;
-                Seller = auction.Seller;
-                Winner = auction.Winner;
+        public string Description { get; set; }
 
-                ActiveBid = auction.ActiveBid;
-                IsClosed = auction.IsClosed;
-                IsRunning = auction.IsRunning;
-            }
-            else
+        public double CurrentPrice
+        {
+            get { return currentPrice; }
+            set
             {
-                StartDateTimeUtc = DateTime.Today;
-                EndDateTimeUtc = DateTime.Today;
+                if (currentPrice != value)
+                {
+                    currentPrice = value;
+                    RaisePropertyChanged(() => CurrentPrice);
+                }
             }
         }
 
-        private void NewBidAction(Auction a)
+        public double BidCount
         {
-            var view = new BidView(a);
+            get { return bidCount; }
+            set
+            {
+                if (bidCount != value)
+                {
+                    bidCount = value;
+                    RaisePropertyChanged(() => BidCount);
+                }
+            }
+        }
+
+        public string CurrentWinner
+        {
+            get { return currentWinner; }
+            set { Set(() => CurrentWinner, ref currentWinner, value); }
+        }
+
+        public DateTime StartDateTimeLocal { get { return auction.StartDateTimeUtc.ToLocalTime(); } }
+
+        public DateTime EndDateTimeLocal { get { return auction.EndDateTimeUtc.ToLocalTime(); } }
+
+        public DateTime? CloseDateTimeLocal
+        {
+            get { return closedDateLocal != null ? closedDateLocal.Value.ToLocalTime() : (DateTime?)null; }
+            set { closedDateLocal = value; }
+        }
+
+        public Member Seller { get { return auction.Seller; } }
+
+        public String Winner
+        {
+            get { return winner; }
+            set { Set(() => Winner, ref winner, value); }
+        }
+
+        public bool IsRunning
+        {
+            get { return isRunning; }
+            set
+            {
+                if (isRunning != value)
+                {
+                    isRunning = value;
+                    RaisePropertyChanged(() => IsRunning);
+                }
+            }
+        }
+
+        public AuctionViewModel(Auction auction)
+        {
+            this.auction = auction;
+
+            NewBidCommand = new RelayCommand<object>(NewBidAction);
+
+            Update(auction);
+        }
+
+        private void NewBidAction(object o)
+        {
+            var view = new BidView(this.auction);
             view.ShowDialog();
+        }
+
+        public void Update(Auction auction)
+        {
+            this.auction = auction;
+
+            Status = this.auction.IsClosed ? "Closed" : "Valid";
+            CurrentPrice = this.auction.CurrentPrice;
+            BidCount = this.auction.Bids.Count;
+            IsRunning = this.auction.IsRunning;
+
+            if (this.auction.ActiveBid != null)
+                CurrentWinner = this.auction.ActiveBid.Bidder.DisplayName;
+
+            if (this.auction.CloseDateTimeUtc > DateTime.MinValue)
+                CloseDateTimeLocal = this.auction.CloseDateTimeUtc.ToLocalTime();
+
+            if (this.auction.Winner != null)
+                Winner = this.auction.Winner.DisplayName;
         }
     }
 }

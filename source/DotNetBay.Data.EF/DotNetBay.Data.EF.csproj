@@ -4,16 +4,15 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{EB070B8C-4CBF-425D-90FA-48834DBEE9B8}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <ProjectGuid>{F658F815-DADC-495A-B24B-DD2AFA24EF2D}</ProjectGuid>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>DotNetBay.Cmd</RootNamespace>
-    <AssemblyName>DotNetBay.Cmd</AssemblyName>
+    <RootNamespace>DotNetBay.Data.EF</RootNamespace>
+    <AssemblyName>DotNetBay.Data.EF</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -23,7 +22,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -48,34 +46,43 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Program.cs" />
+    <Compile Include="DateTime2Convention.cs" />
+    <Compile Include="EFMainRepository.cs" />
+    <Compile Include="MainDbContext.cs" />
+    <Compile Include="Migrations\201503172241221_Initial-Migration.cs" />
+    <Compile Include="Migrations\201503172241221_Initial-Migration.Designer.cs">
+      <DependentUpon>201503172241221_Initial-Migration.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201503172328559_AddLocation.cs" />
+    <Compile Include="Migrations\201503172328559_AddLocation.Designer.cs">
+      <DependentUpon>201503172328559_AddLocation.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\DotNetBay.Core\DotNetBay.Core.csproj">
-      <Project>{9EF46B21-B552-4CC6-A4C0-E81091A4064B}</Project>
-      <Name>DotNetBay.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\DotNetBay.Data.EF\DotNetBay.Data.EF.csproj">
-      <Project>{F658F815-DADC-495A-B24B-DD2AFA24EF2D}</Project>
-      <Name>DotNetBay.Data.EF</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\DotNetBay.Data.FileStorage\DotNetBay.Data.FileStorage.csproj">
-      <Project>{92942123-C7EC-4418-9B48-F5D62BE7E7A3}</Project>
-      <Name>DotNetBay.Data.FileStorage</Name>
-    </ProjectReference>
     <ProjectReference Include="..\DotNetBay.Interfaces\DotNetBay.Interfaces.csproj">
-      <Project>{17745E6C-337C-44BD-9C50-5F1D45CEADA5}</Project>
+      <Project>{17745e6c-337c-44bd-9c50-5f1d45ceada5}</Project>
       <Name>DotNetBay.Interfaces</Name>
     </ProjectReference>
     <ProjectReference Include="..\DotNetBay.Model\DotNetBay.Model.csproj">
-      <Project>{908D8739-3185-46EB-A03E-6B6C3849857C}</Project>
+      <Project>{908d8739-3185-46eb-a03e-6b6c3849857c}</Project>
       <Name>DotNetBay.Model</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201503172241221_Initial-Migration.resx">
+      <DependentUpon>201503172241221_Initial-Migration.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201503172328559_AddLocation.resx">
+      <DependentUpon>201503172328559_AddLocation.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

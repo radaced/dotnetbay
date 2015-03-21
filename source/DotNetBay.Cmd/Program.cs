@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Data.Entity;
+using System.Data.Entity.SqlServer;
 using System.Linq;
-
 using DotNetBay.Core;
 using DotNetBay.Core.Execution;
+using DotNetBay.Data.EF;
+using DotNetBay.Data.EF.Migrations;
 using DotNetBay.Data.FileStorage;
 
 namespace DotNetBay.Cmd
@@ -14,6 +17,9 @@ namespace DotNetBay.Cmd
     {
         public static void Main(string[] args)
         {
+            var ensureDLLIsCopied = SqlProviderServices.Instance;
+            Database.SetInitializer(new MigrateDatabaseToLatestVersion<MainDbContext, Configuration>());
+
             Console.WriteLine("DotNetBay Commandline");
 
             var store = new FileSystemMainRepository("store.json");
