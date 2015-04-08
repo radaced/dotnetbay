@@ -26,8 +26,10 @@ namespace DotNetBay.WPF
             var ensureDLLIsCopied = SqlProviderServices.Instance;
             Database.SetInitializer(new MigrateDatabaseToLatestVersion<MainDbContext, Configuration>());
 
-            MainRepository = new FileSystemMainRepository("data.json");
-            AuctionRunner = new AuctionRunner(this.MainRepository);
+            MainRepository = new EFMainRepository();
+            MainRepository.SaveChanges();
+            //MainRepository = new FileSystemMainRepository("data.json");   *ohne EF
+            AuctionRunner = new AuctionRunner(MainRepository);
 
             AuctionRunner.Start();
             AddTestAuctions();
