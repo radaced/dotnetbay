@@ -46,12 +46,8 @@ namespace DotNetBay.Test.Core
             // Litte hack: Manual change of start time
             auction.StartDateTimeUtc = DateTime.UtcNow.AddDays(-1);
 
-<<<<<<< HEAD
-            var bidder = memberService.Add("Michael", "michael.schnyder@fhnw.ch");
-=======
             var bidder = userService.Add("Michael", "michael.schnyder@fhnw.ch");
             userService.SetCurrentMember(bidder);
->>>>>>> pr/3
 
             service.PlaceBid(auction, 51);
 
