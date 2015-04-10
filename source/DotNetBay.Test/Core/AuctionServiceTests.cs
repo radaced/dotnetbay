@@ -49,8 +49,8 @@ namespace DotNetBay.Test.Core
             auction.StartDateTimeUtc = DateTime.UtcNow.AddDays(-1);
 
             var bidder = memberService.Add("Michael", "michael.schnyder@fhnw.ch");
-            
-            service.PlaceBid(bidder, auction, 51);
+
+            service.PlaceBid(auction, 51);
 
             Assert.AreEqual(1, auction.Bids.Count);
             Assert.AreEqual(1, bidder.Bids.Count);
@@ -84,7 +84,7 @@ namespace DotNetBay.Test.Core
             auction.StartDateTimeUtc = DateTime.UtcNow.AddDays(1);
             service.Save(auction);
 
-            service.PlaceBid(simpleMemberService.GetCurrentMember(), auction, 100);
+            service.PlaceBid(auction, 100);
         }
 
         [TestCase]
@@ -103,7 +103,7 @@ namespace DotNetBay.Test.Core
             
             repo.Add(auction);
 
-            service.PlaceBid(simpleMemberService.GetCurrentMember(), auction, 100);
+            service.PlaceBid(auction, 100);
         }
 
         private static Auction CreateGeneratedAuction()

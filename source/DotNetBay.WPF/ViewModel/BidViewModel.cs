@@ -39,7 +39,7 @@ namespace DotNetBay.WPF.ViewModel
         {
             if (ValidateInput())
             {
-                auctionService.PlaceBid(simpleMemberService.GetCurrentMember(), auction, Bid);
+                auctionService.PlaceBid(auction, Bid);
                 window.Close();
             }
         }
