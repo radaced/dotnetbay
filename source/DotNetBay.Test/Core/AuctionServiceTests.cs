@@ -34,21 +34,24 @@ namespace DotNetBay.Test.Core
         public void WithExistingAuction_AfterPlacingABid_TheBidShouldBeAssignedToAuctionAndUser()
         {
             var repo = new InMemoryMainRepository();
-            var userService = new SimpleMemberService(repo);
+            var userService = new MockedMemberService(repo);
             var service = new AuctionService(repo, userService);
 
             var auction = CreateGeneratedAuction();
 
             auction.Seller = userService.Add("Seller", "seller@mail.com");
 
-            var memberService = userService;
-
             service.Save(auction);
 
             // Litte hack: Manual change of start time
             auction.StartDateTimeUtc = DateTime.UtcNow.AddDays(-1);
 
+<<<<<<< HEAD
             var bidder = memberService.Add("Michael", "michael.schnyder@fhnw.ch");
+=======
+            var bidder = userService.Add("Michael", "michael.schnyder@fhnw.ch");
+            userService.SetCurrentMember(bidder);
+>>>>>>> pr/3
 
             service.PlaceBid(auction, 51);
 

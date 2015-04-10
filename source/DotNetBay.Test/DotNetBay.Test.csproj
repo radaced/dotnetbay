@@ -59,7 +59,11 @@
     <Compile Include="Core\AuctionServiceTests.cs" />
     <Compile Include="Core\AuctioneerTests.cs" />
     <Compile Include="Core\MemberServiceTest.cs" />
+<<<<<<< HEAD
     <Compile Include="Storage\EFMainRepositoryTests.cs" />
+=======
+    <Compile Include="Core\MockedMemberService.cs" />
+>>>>>>> pr/3
     <Compile Include="Storage\FileSystemMainRepositoryTests.cs" />
     <Compile Include="Storage\TempDirectory.cs" />
     <Compile Include="Storage\TempFile.cs" />
